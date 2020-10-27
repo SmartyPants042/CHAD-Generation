@@ -1,2 +1,2 @@
 # CHAD-Generation
-Conversational Humour And Discourse Generation
+Conversational Humor And Discourse Generation
