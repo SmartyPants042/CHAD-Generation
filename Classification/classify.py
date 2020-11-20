@@ -7,10 +7,14 @@ import pickle
 import json
 import numpy as np
 
+from tqdm import tqdm
+
 from nltk.corpus import gutenberg
 from nltk.corpus import webtext
 
 from features_all import features_list
+
+from sklearn.preprocessing import normalize
 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
@@ -25,9 +29,9 @@ import matplotlib.pyplot as plt
 def make_data():
     global sentences
     global y
-    other_sentences = json.load(open("./Corpus/Jokes/reddit_jokes.json"))[:100]
+    other_sentences = json.load(open("./Corpus/Jokes/reddit_jokes.json"))[:10000]
     y1 = len(other_sentences)
-    general_sentences = open("./Corpus/General/general.txt").readlines()[:100]    
+    general_sentences = open("./Corpus/General/general.txt").readlines()[:10000]    
     y2 = len(general_sentences)
 
     sentences = [sentence for sentence in other_sentences]
@@ -49,20 +53,21 @@ def make_data():
 
 def extract_features(sentences):
     features = []
-    for sentence in sentences:
+    print("processing ...")
+    for sentence in tqdm(sentences):
         feature_sent = []
         for feature in features_list:
             feature_sent.append(feature(sentence))
         features.append(feature_sent)
     return features
 
-def fit_model(features, y, test_size=0.20):
+def fit_model(features, y, classify, test_size=0.20):
+    normalized_features = normalize(features)
     X_train, X_test, y_train, y_test = train_test_split(
-        features, y, test_size=test_size, random_state=42
+        normalized_features, y, test_size=test_size, random_state=42
     )
     print("Split and Shuffled the Data")
 
-    classify = LogisticRegression()
     classify.fit(X_train, y_train)
     
     return classify, X_test, y_test
@@ -91,22 +96,25 @@ def predict(classifier, input_text):
     return classifier.predict(features)
 
 if __name__ == "__main__":
-    sentences, y = make_data()
-    print("Loaded Data")
+    # sentences, y = make_data()
+    # print("Loaded Data")
 
-    features = extract_features(sentences)
-    print("Added features:")
-    for i, feature in enumerate(features_list):
-        print(f"\t{i+1}. {feature.__name__}")
+    # features = extract_features(sentences)
+    # print("Added features:")
+    # for i, feature in enumerate(features_list):
+    #     print(f"\t{i+1}. {feature.__name__}")
 
-    classify, X_test, y_test = fit_model(features, y, test_size=0.2)
-    print("Fitted Model")
+
+    # classifier = LogisticRegression()
+    # classify, X_test, y_test = fit_model(features, y, classifier, test_size=0.2)
+    # print("Fitted Model")
     
-    # show_model_results(X_test, y_test)
+    # # show_model_results(X_test, y_test)
 
-    save_model("LogReg")
-    print("Saved Model")
+    # save_model("LogReg")
+    # print("Saved Model")
 
     classifier = load_model("LogReg")
     print("Loaded Model")
-    print(predict(classifier, input("Enter test: ")))
+    final_prediction = predict(classifier, input("Enter test: "))
+    print("General Sentence") if final_prediction else print("Humorous Sentence")

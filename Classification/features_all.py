@@ -1,5 +1,11 @@
 from Helpers.cmu_interface import get_phones
-from ntlk.corpus import wordnet as wn
+
+from nltk.corpus import wordnet as wn
+
+import spacy
+nlp = spacy.load("en_core_web_sm")
+
+features_list = []
 
 def sentence_length(sentence):
     return len(sentence)
@@ -33,10 +39,58 @@ def alliteration_chain_length(sentence):
 def antonym_pairs(sentence):
     pass
 
-features_list = []
+def POS_verbs_ratio(sentence):
+    total = len(sentence.split())
+    doc = nlp(sentence)
+    
+    count = 0
+    for token in doc:
+        if token.pos_ == "VERB":
+            count += 1
+    
+    return round(count/total, 3)
+
+def POS_proper_nouns_ratio(sentence):
+    total = len(sentence.split())
+    doc = nlp(sentence)
+    
+    count = 0
+    for token in doc:
+        if token.pos_ == "PROPN":
+            count += 1
+    
+    return round(count/total, 3)
+
+
+def POS_nouns_ratio(sentence):
+    total = len(sentence.split())
+    doc = nlp(sentence)
+    
+    count = 0
+    for token in doc:
+        if token.pos_ == "NOUN":
+            count += 1
+    
+    return round(count/total, 3)
+
+def POS_pronouns_ratio(sentence):
+    total = len(sentence.split())
+    doc = nlp(sentence)
+    
+    count = 0
+    for token in doc:
+        if token.pos_ == "PRON":
+            count += 1
+    
+    return round(count/total, 3)
+
 features_list.append(sentence_length)
 features_list.append(alliteration_chain_length)
 
-if __name__ == "__main__":
-    # print(alliteration_chain_length("apples apples good good goody"))
-    pass
+# if __name__ == "__main__":
+#     print(alliteration_chain_length("apples apples good good goody"))
+#     print(POS_verbs_ratio("The gorilla ate the banana."))
+#     print(POS_nouns_ratio("The gorilla ate the banana."))
+#     print(POS_pronouns_ratio("The gorilla ate the banana. He was hungry."))
+#     print(POS_proper_nouns_ratio("Will Smith ate the banana."))
+
