@@ -4,6 +4,7 @@ import sys
 sys.path.append("../")
 
 import pickle
+import json
 import numpy as np
 
 from nltk.corpus import gutenberg
@@ -24,7 +25,7 @@ import matplotlib.pyplot as plt
 def make_data():
     global sentences
     global y
-    other_sentences = open("./Corpus/Other/other.txt").readlines()[:100]
+    other_sentences = json.load(open("./Corpus/Jokes/reddit_jokes.json"))[:100]
     y1 = len(other_sentences)
     general_sentences = open("./Corpus/General/general.txt").readlines()[:100]    
     y2 = len(general_sentences)
@@ -96,12 +97,12 @@ if __name__ == "__main__":
     features = extract_features(sentences)
     print("Added features:")
     for i, feature in enumerate(features_list):
-        print(f"\t{i}. {feature.__name__}")
+        print(f"\t{i+1}. {feature.__name__}")
 
     classify, X_test, y_test = fit_model(features, y, test_size=0.2)
     print("Fitted Model")
     
-    # show_model_results(X_te`st, y_test)
+    # show_model_results(X_test, y_test)
 
     save_model("LogReg")
     print("Saved Model")
