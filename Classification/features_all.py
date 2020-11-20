@@ -1,5 +1,5 @@
 from Helpers.cmu_interface import get_phones
-
+from string import punctuation as puncts
 from nltk.corpus import wordnet as wn
 
 import spacy
@@ -37,7 +37,30 @@ def alliteration_chain_length(sentence):
     return count
 
 def antonym_pairs(sentence):
-    pass
+    """
+    Takes in a sentence and returns a list of tuples with all antonyms pairs
+    """
+    allantons = []
+    sentence = sentence.lower().strip()
+    for i in puncts:
+        sentence = sentence.replace(i,'')
+    words = sentence.split(' ')
+    end = len(words)
+    for i in range(end-1):
+        for j in range(i+1,end):
+            w1, w2 = words[i], words[j]
+            w1s, w2s = wn.synsets(w1), wn.synsets(w2)
+            for x in w1s:
+                for y in w2s:
+                    xarr = x.lemmas()
+                    yarr = y.lemmas()
+                    for p in xarr:
+                        for q in p.antonyms():
+                            if q in yarr:
+                                thing = (w1,w2)
+                                if thing not in allantons:
+                                    allantons.append(thing)
+    return allantons
 
 def POS_verbs_ratio(sentence):
     total = len(sentence.split())
