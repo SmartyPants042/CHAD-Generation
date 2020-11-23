@@ -29,9 +29,9 @@ import matplotlib.pyplot as plt
 def make_data():
     global sentences
     global y
-    other_sentences = json.load(open("./Corpus/Jokes/reddit_jokes.json"))[:10000]
+    other_sentences = json.load(open("./Corpus/Jokes/reddit_jokes.json"))[:1000]
     y1 = len(other_sentences)
-    general_sentences = open("./Corpus/General/general.txt").readlines()[:10000]    
+    general_sentences = open("./Corpus/General/cleaned_general.txt").readlines()[:1000]    
     y2 = len(general_sentences)
 
     sentences = [sentence for sentence in other_sentences]
@@ -96,25 +96,25 @@ def predict(classifier, input_text):
     return classifier.predict(features)
 
 if __name__ == "__main__":
-    # sentences, y = make_data()
-    # print("Loaded Data")
+    sentences, y = make_data()
+    print("Loaded Data")
 
-    # features = extract_features(sentences)
-    # print("Added features:")
-    # for i, feature in enumerate(features_list):
-    #     print(f"\t{i+1}. {feature.__name__}")
+    features = extract_features(sentences)
+    print("Added features:")
+    for i, feature in enumerate(features_list):
+        print(f"\t{i+1}. {feature.__name__}")
 
 
-    # classifier = LogisticRegression()
-    # classify, X_test, y_test = fit_model(features, y, classifier, test_size=0.2)
-    # print("Fitted Model")
+    classifier = LogisticRegression()
+    classify, X_test, y_test = fit_model(features, y, classifier, test_size=0.2)
+    print("Fitted Model")
     
-    # # show_model_results(X_test, y_test)
+    show_model_results(X_test, y_test)
 
-    # save_model("LogReg")
-    # print("Saved Model")
+    save_model("LogReg")
+    print("Saved Model")
 
-    classifier = load_model("LogReg")
-    print("Loaded Model")
-    final_prediction = predict(classifier, input("Enter test: "))
-    print("General Sentence") if final_prediction else print("Humorous Sentence")
+    # classifier = load_model("LogReg")
+    # print("Loaded Model")
+    # final_prediction = predict(classifier, input("Enter test: "))
+    # print("General Sentence") if final_prediction else print("Humorous Sentence")
