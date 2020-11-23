@@ -1,4 +1,4 @@
-f = open('./Classification/Helpers/CMU_dict')
+f = open('./Classification/Helpers/CMU/CMU_dict')
 words_string = f.readlines()
 
 def get_phones(given_word):
