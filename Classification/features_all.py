@@ -1,4 +1,7 @@
 from Helpers.cmu_interface import get_phones
+from Helpers.discourse_markers import formal_markers, informal_markers
+from Helpers.SenticNet.senticnet6_polarity import senticnet6
+from Helpers.slang import slangs
 from string import punctuation as puncts
 from nltk.corpus import wordnet as wn
 
@@ -38,7 +41,8 @@ def alliteration_chain_length(sentence):
 
 def antonym_pairs(sentence):
     """
-    Takes in a sentence and returns a list of tuples with all antonyms pairs
+    Takes in a sentence and returns the length
+    of the list of tuples with all antonyms pairs
     """
     allantons = []
     sentence = sentence.lower().strip()
@@ -60,7 +64,7 @@ def antonym_pairs(sentence):
                                 thing = (w1,w2)
                                 if thing not in allantons:
                                     allantons.append(thing)
-    return allantons
+    return len(allantons)
 
 def POS_verbs_ratio(sentence):
     total = len(sentence.split())
@@ -84,7 +88,6 @@ def POS_proper_nouns_ratio(sentence):
     
     return round(count/total, 3)
 
-
 def POS_nouns_ratio(sentence):
     total = len(sentence.split())
     doc = nlp(sentence)
@@ -107,8 +110,64 @@ def POS_pronouns_ratio(sentence):
     
     return round(count/total, 3)
 
+def discourse_markers(sentence):
+    """
+    returns the count of how many discourse markers are used
+    """
+    count = 0
+    for marker in informal_markers:
+        if marker in sentence:
+            count += 1
+
+    for marker in formal_markers:
+        if marker in sentence:
+            count += 1
+    
+    return count
+
+def polarity(sentence):
+    """
+    returns the sum of the polarities from SenticNet
+    """
+    score = 0
+    for word in sentence.split():
+        try:
+            score += senticnet6[word]
+        except:
+            pass
+    return score
+
+def absolute_polarity(sentence):
+    """
+    returns the absolute sum of the polarities from SenticNet
+    """
+    score = 0
+    for word in sentence.split():
+        try:
+            score += abs(senticnet6[word])
+        except:
+            pass
+    return score
+
+def all_slangs(sentence):
+    sentence = sentence.lower()
+    count = 0
+    for slang in slangs:
+        if slang in sentence:
+            count += 1
+    
+    return int(bool(count))
+
 features_list.append(sentence_length)
 features_list.append(alliteration_chain_length)
+features_list.append(POS_nouns_ratio)
+features_list.append(POS_pronouns_ratio)
+features_list.append(POS_verbs_ratio)
+features_list.append(POS_proper_nouns_ratio)
+features_list.append(discourse_markers)
+features_list.append(polarity)
+features_list.append(absolute_polarity)
+features_list.append(all_slangs)
 
 # if __name__ == "__main__":
 #     print(alliteration_chain_length("apples apples good good goody"))
