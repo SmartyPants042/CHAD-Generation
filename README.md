@@ -1,5 +1,5 @@
 # CHAD-Generation
-Conversational Humor And Discourse Generation
+Conversational Humor And Design Model
 
 ### requirements
 - NLTK(3.5)
