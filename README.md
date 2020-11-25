@@ -1,4 +1,4 @@
-# CHAD-Generation
+# CHAD-Model
 Conversational Humor And Design Model
 
 ### requirements
