@@ -76,3 +76,56 @@ https://i.imgur.com/j1poxyK.jpg"
 
 At this point the jokes make perfect logical sense, along with grammatical rules followed. However, at this point, the n became so large, that the jokes were repetetive.
 
+
+## Word Level LSTM
+Neural Techniques for text generation are very popular. Especially with the coming of BERT and GPT-3 Transformer Models. However, since they are much of a black-box, we decided to test out humor generation using a Word level LSTM Model written in PyTorch.
+
+Our end goal was to generate humorous texts, and since models learn from the Reddit Data Corpus, we expect that the jokes are similar in style to the Reddit taste of humor.
+
+We first start with pre-processing our data, using spacy's tokenizer. Then, we turn our attention to word embeddings. We wanted to look at the differences of using Word2Vec versus training our own embeddings. 
+Below is the model architecture:
+
+Embedding Layer 
+-- (converts words to machine understandable vectors)-->
+LSTM Layer 1
+-- (converts vector to internal meaning representations) -->
+LSTM Layer 2
+-- (Extracts and goes to a greater depth of relations) -->
+Linear Layer
+-- (Converts Sequential Data in output ready format) --|
+
+The reason for using two lstm layers stacked on top of each other is that while the first one extracts the word-level meanings, we can go a level beyond and look at sentence level abstractions in the second layer.
+
+## Experiments
+We observed the very high training time, even after reducing the dataset size. This is due to the sequential nature of LSTM cells, where nth cell requires data from all the previous (n-1) cells. There are very little optimizations that can be done; and the training time can range upto 30 minutes per epoch.
+
+Below is our hyperparameter configuration that we use to generate the jokes:
+
+The sequence length controls how many words the model sees, before predicting the next word. The lesser it it, the more grammatically incorrect the sequence becomes. On the other hand, increasing it too much causes overfitting; the jokes become repetitive.
+SEQUENCE_LENGTH = 3
+
+The number of times our model sees the entire data
+EPOCHS = 4
+
+The size of samples it sees at once. 32 for GPU level optimizations
+BATCH_SIZE = 32
+
+The architecture of the model, as described above. Droput is percentage of cells that are temporarily put on hold, for a particular iteration. This prevents overfitting. 
+MODEL_CONFIG = {
+    'pre_embed': True,
+    'embedding_dim': 100,
+    'lstm_cells': 100,
+    'lstm_num_layers': 2,
+    'lstm_dropout': 0.2
+}
+
+The size of the generated joke
+PREDICTION_SIZE = 20
+
+![Model Accuracy](https://i.imgur.com/k2w2HKP.png)
+
+
+Generated Samples:
+"Knock knock . Who s there ? Someone wo n't get an battery toilet ? ... The NBA says to down and Hilary old time."
+
+"Knock knock . Who s there ?     I was knot . " I 'll understand to feminists . Sign child out there take up prefer" 
