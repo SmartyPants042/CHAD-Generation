@@ -122,7 +122,7 @@ def discourse_markers(sentence):
     for marker in formal_markers:
         if marker in sentence:
             count += 1
-    
+
     return count
 
 def polarity(sentence):
@@ -155,24 +155,23 @@ def all_slangs(sentence):
     for slang in slangs:
         if slang in sentence:
             count += 1
-    
-    return int(bool(count))
+    return int(count)
 
-features_list.append(sentence_length)
+# features_list.append(sentence_length)
 features_list.append(alliteration_chain_length)
 features_list.append(POS_nouns_ratio)
 features_list.append(POS_pronouns_ratio)
 features_list.append(POS_verbs_ratio)
 features_list.append(POS_proper_nouns_ratio)
 features_list.append(discourse_markers)
+features_list.append(antonym_pairs)
 features_list.append(polarity)
 features_list.append(absolute_polarity)
 features_list.append(all_slangs)
 
 # if __name__ == "__main__":
-#     print(alliteration_chain_length("apples apples good good goody"))
+#     print(alliteration_chain_length("You hear about the University book store worker who was charged for stealing $20,000 worth of books? ... He got caught trying to sell the two books to a freshman ."))
 #     print(POS_verbs_ratio("The gorilla ate the banana."))
 #     print(POS_nouns_ratio("The gorilla ate the banana."))
 #     print(POS_pronouns_ratio("The gorilla ate the banana. He was hungry."))
 #     print(POS_proper_nouns_ratio("Will Smith ate the banana."))
-
