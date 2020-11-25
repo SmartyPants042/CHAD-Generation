@@ -105,13 +105,13 @@ if __name__ == "__main__":
         print(f"\t{i+1}. {feature.__name__}")
 
 
-    classifier = LogisticRegression()
+    classifier = GaussianNB()
     classify, X_test, y_test = fit_model(features, y, classifier, test_size=0.2)
     print("Fitted Model")
     
     show_model_results(X_test, y_test)
 
-    save_model("LogReg")
+    save_model("GaussianNB")
     print("Saved Model")
 
     # classifier = load_model("LogReg")
